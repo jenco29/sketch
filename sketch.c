@@ -27,7 +27,9 @@ void freeState(state *s) {
 // Extract an opcode from a byte (two most significant bits).
 int getOpcode(byte b) {
   //TO DO
-  return 0; // this is a placeholder only
+  int n = b >> 6; 
+  return n;
+ // this is a placeholder only
 }
 
 // Extract an operand (-32..31) from the rightmost 6 bits of a byte.
