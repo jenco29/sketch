@@ -12,7 +12,7 @@ state *newState() {
   new->y = 0;
   new->tx = 0;
   new->ty = 0;
-  new->tool = 0;
+  new->tool = 1;
   new->start = 0;
   new->data = 0;
   new->end = false;
@@ -43,7 +43,13 @@ int getOperand(byte b) {
 
 // Execute the next byte of the command sequence.
 void obey(display *d, state *s, byte op) {
-  //TO DO
+  int opcode = getOpcode(op);
+  int operand = getOperand(op);
+  if(opcode == 0) s->tx = s->tx + operand;
+  else if(opcode == 1) s->ty = s->ty + operand;
+  else if(opcode == 2) s-> tool = operand;
+  s->x = s->tx;
+  s->y = s->ty;
 }
 
 // Draw a frame of the sketch file. For basic and intermediate sketch files
