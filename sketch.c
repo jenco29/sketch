@@ -32,10 +32,13 @@ int getOpcode(byte b) {
 
 // Extract an operand (-32..31) from the rightmost 6 bits of a byte.
 int getOperand(byte b) { 
-  int n = b & 63; // () 
-  int check = b >> 5;
-  if((check & 1) == 1) return (signed char)n;
-  return n;; // this is a placeholder only
+  int n = b & 63; // sets most significant 2 bits to 0
+  int check = n >> 5; // gets first 3 bits
+  if(check == 1){ 
+    n = n | 192; // sets the 2 most significant bits to 1
+    return (int)(signed char)(n);
+  } 
+  return n;
 }
 
 // Execute the next byte of the command sequence.
