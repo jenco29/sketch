@@ -78,7 +78,9 @@ static void testBasicCommand() {
   obey(d, s, 0x80);
   assert(__LINE__, s->tool == NONE);
   obey(d, s, 0x1e);
+  printf("%d %d %d %d\n", s->x, s->y, s->tx, s->ty);
   obey(d, s, 0x7F);
+  printf("%d %d %d %d\n", s->x, s->y, s->tx, s->ty);
   assert(__LINE__, s->tx == 60 && s->ty == 29);
   assert(__LINE__, s->x == 60 && s->y == 29);
   obey(d, s, 0x81);

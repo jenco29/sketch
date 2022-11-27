@@ -45,15 +45,17 @@ int getOperand(byte b) {
 void obey(display *d, state *s, byte op) {
   int opcode = getOpcode(op);
   int operand = getOperand(op);
-  if(opcode == 0) s->tx += operand;
-  if(opcode == 1) {
-    s->ty += operand;
-    if(s->tool == 1) line(d, s->x, s->y, s->tx, s->ty);
-  }
   if(opcode == 2) s->tool = operand;
-  s->x = s->tx;
-  s->y = s->ty;
+  else if(opcode == 0) {
+    s->tx += operand;
+  }
+  else if(opcode == 1) {
+    s->ty += operand;
+    if(s-> tool != 0) line(d, s->x, s->y, s->tx, s->ty);
+    s->x = s->tx;
+    s->y = s->ty;
 }
+  }
 
 // Draw a frame of the sketch file. For basic and intermediate sketch files
 // this means drawing the full sketch whenever this function is called.
