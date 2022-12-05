@@ -49,10 +49,7 @@ void setTools(display *d, state *s, int operand) {
     else if(operand == 5) s->ty = s->data;
     else if(operand == 6) show(d);
     else if(operand == 7) pause(d, s->data);
-    else if(operand == 8) {
-      s->start = s->x;
-      s->end = true;
-    }
+    else if(operand == 8) s->end = true;
     s->data = 0;
   }
 }
@@ -94,25 +91,40 @@ void reset(state *s) {
   s->tool = 1;
   s->end = false;
 }
+
 bool processSketch(display *d, const char pressedKey, void *data) {
   if (data == NULL) return (pressedKey == 27);
   char *filename = getName(d);
   state *s = (state*) data;
   FILE *in = fopen(filename, "rb");
+  //if(! s->end) s->start = 0;
+  //else for(int i = 0; i < s->start; i ++) fgetc(in);
+  /*
+  byte b;
+  for(int i = s->start; ! feof(in); i++){ 
+    if(s->end){
+      show(d);
+      return false;
+    }
+    b = fgetc(in);
+    obey(d, s, b); 
+  }*/
   byte b = fgetc(in);
   obey(d, s, b);
   while(! feof(in)){
-    if(s->end) {
-      show(d);
-      return true;
-      }
     b = fgetc(in);
     obey(d, s, b);
+    if(s->end){
+      reset(s);
+      show(d);
+      return d;
+    }
   }
   fclose(in);
   show(d);
   reset(s);
-  return true;
+  s->start = s->start + 1;
+  return (pressedKey == 27);
     //TO DO: OPEN, PROCESS/DRAW A SKETCH FILE BYTE BY BYTE, THEN CLOSE IT
     //NOTE: CHECK DATA HAS BEEN INITIALISED... if (data == NULL) return (pressedKey == 27);
     //NOTE: TO GET ACCESS TO THE DRAWING STATE USE... state *s = (state*) data;
