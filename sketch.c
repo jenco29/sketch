@@ -89,7 +89,7 @@ void reset(state *s) {
   s->tx = 0;
   s->ty = 0;
   s->tool = 1;
-  s->end = false;
+  s->data = 0;
 }
 
 bool processSketch(display *d, const char pressedKey, void *data) {
@@ -97,33 +97,25 @@ bool processSketch(display *d, const char pressedKey, void *data) {
   char *filename = getName(d);
   state *s = (state*) data;
   FILE *in = fopen(filename, "rb");
-  //if(! s->end) s->start = 0;
-  //else for(int i = 0; i < s->start; i ++) fgetc(in);
-  /*
+  if(! s->end) s->start = 0;
+  else {
+    for(int i = 0; i < s->start; i ++) fgetc(in);
+    s->end = false;
+  }
   byte b;
   for(int i = s->start; ! feof(in); i++){ 
+    s->start = i;
     if(s->end){
       show(d);
+      reset(s);
       return false;
     }
     b = fgetc(in);
     obey(d, s, b); 
-  }*/
-  byte b = fgetc(in);
-  obey(d, s, b);
-  while(! feof(in)){
-    b = fgetc(in);
-    obey(d, s, b);
-    if(s->end){
-      reset(s);
-      show(d);
-      return d;
-    }
   }
   fclose(in);
   show(d);
   reset(s);
-  s->start = s->start + 1;
   return (pressedKey == 27);
     //TO DO: OPEN, PROCESS/DRAW A SKETCH FILE BYTE BY BYTE, THEN CLOSE IT
     //NOTE: CHECK DATA HAS BEEN INITIALISED... if (data == NULL) return (pressedKey == 27);
